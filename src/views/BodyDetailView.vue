@@ -1,26 +1,30 @@
 <template>
-  <div v-if="body">
-    <h1>{{ body.englishName }}</h1>
-    <p>Type: {{ body.bodyType }}</p>
-    <p v-if="body.isPlanet">C'est une planète</p>
-    <p v-else>Ce n'est pas une planète</p>
+  <div class="page">
+    <AstroDetails v-if="body" :body="body" />
+    <p v-else>Chargement...</p>
   </div>
 </template>
 
-<script>
-import { fetchBodyById } from '../services/api';
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import AstroDetails from '@/components/AstroDetails.vue'
 
-export default {
-  name: 'BodyDetailView',
-  data() {
-    return {
-      body: null
-    };
-  },
-  async mounted() {
-    const id = this.$route.params.id;
-    const response = await fetchBodyById(id);
-    this.body = response.data;
+const route = useRoute()
+const body = ref(null)
+
+onMounted(async () => {
+  try {
+    const res = await fetch(`https://api.le-systeme-solaire.net/rest/bodies/${route.params.id}`)
+    body.value = await res.json()
+  } catch (error) {
+    console.error('Erreur lors du chargement de l’astre', error)
   }
-}
+})
 </script>
+
+<style scoped>
+.page {
+  padding: 1rem;
+}
+</style>

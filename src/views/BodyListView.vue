@@ -1,27 +1,29 @@
 <template>
-  <div>
+  <div class="page">
     <h1>Liste des astres</h1>
-    <ul>
-      <li v-for="body in bodies" :key="body.id">
-        <router-link :to="'/body/' + body.id">{{ body.englishName }}</router-link>
-      </li>
-    </ul>
+    <AstroList :bodies="bodies" />
   </div>
 </template>
 
-<script>
-import { fetchBodies } from '../services/api';
+<script setup>
+import { ref, onMounted } from 'vue'
+import AstroList from '@/components/AstroList.vue'
 
-export default {
-  name: 'BodyListView',
-  data() {
-    return {
-      bodies: []
-    };
-  },
-  async mounted() {
-    const response = await fetchBodies();
-    this.bodies = response.data.bodies.slice(0, 10); // Charge juste les 10 premiers pour alléger
+const bodies = ref([])
+
+onMounted(async () => {
+  try {
+    const res = await fetch('https://api.le-systeme-solaire.net/rest/bodies/')
+    const data = await res.json()
+    bodies.value = data.bodies
+  } catch (error) {
+    console.error('Erreur lors du chargement des astres', error)
   }
-}
+})
 </script>
+
+<style scoped>
+.page {
+  padding: 1rem;
+}
+</style>

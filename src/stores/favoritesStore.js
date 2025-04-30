@@ -1,22 +1,26 @@
-import { createStore } from 'vuex';
+import { defineStore } from 'pinia';
 
-export default createStore({
-  state: {
+export const useFavoritesStore = defineStore('favorites', {
+  state: () => ({
     favorites: []
-  },
-  mutations: {
-    toggleFavorite(state, body) {
-      const index = state.favorites.findIndex(fav => fav.id === body.id);
-      if (index === -1) {
-        state.favorites.push(body);
-      } else {
-        state.favorites.splice(index, 1);
-      }
-    }
-  },
+  }),
   getters: {
-    isFavorite: (state) => (id) => {
-      return state.favorites.some(fav => fav.id === id);
+    count: (state) => state.favorites.length,
+    isFavorite: (state) => (item) => state.favorites.includes(item)
+  },
+  actions: {
+    addFavorite(item) {
+      if (!this.favorites.includes(item)) {
+        this.favorites.push(item);
+      }
+    },
+    removeFavorite(item) {
+      this.favorites = this.favorites.filter(fav => fav !== item);
+    },
+    toggleFavorite(item) {
+      this.isFavorite(item)
+        ? this.removeFavorite(item)
+        : this.addFavorite(item);
     }
   }
 });
