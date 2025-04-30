@@ -1,24 +1,17 @@
-# systeme-solaire_vf
+# Projet Système Solaire (Vue.js)
 
-## Project setup
-```
+## Installation
+
+```bash
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Structure
 
-### Lints and fixes files
-```
-npm run lint
-```
+- Liste des astres (API du système solaire)
+- Vue détail d’un astre
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## API utilisée
+
+https://api.le-systeme-solaire.net/rest/bodies/
